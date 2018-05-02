@@ -1,0 +1,41 @@
+---
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+
+stages:
+  - commit
+  - syntax
+  - docker
+
+# commit
+git-history:
+  stage: commit
+  script:
+    - >
+      bash <(curl --fail --location --silent --show-error
+      https://git.io/vxIxF)
+
+lines-length:
+  stage: commit
+  script:
+    - >
+      bash <(curl --fail --location --silent --show-error
+      https://git.io/vxIxN)
+
+# syntax
+docker-lint:
+  stage: syntax
+  image: vpgrp/linter:docker
+  script:
+    - find . -type f -name "Dockerfile" | xargs -I{} dockerlint {}
+
+# docker
+build-latest:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+  script:
+    - docker build --rm --tag vpgrp/python:latest .
+# EOF
