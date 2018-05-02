@@ -15,6 +15,7 @@
 FROM vpgrp/debian:stretch
 
 ENV DEBIAN_FRONTEND="noninteractive" \
+    LANG="C.UTF-8" \
     TZ="Europe/Amsterdam"
 
 RUN apt-get update  -qq && \
