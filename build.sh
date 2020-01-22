@@ -9,63 +9,52 @@ else
     DOCKER_USER=${USER}
 fi
 
-# Python latest
+# Python 2.7
 docker build \
        --force-rm \
-       --tag "${DOCKER_USER}/python:latest" \
-       .
+       --tag "${DOCKER_USER}/python:2.7" \
+       2.7
 
-# Python 2.7.13
-docker build \
-       --force-rm \
-       --tag "${DOCKER_USER}/python:2.7.13" \
-       2.7.13
-
-# Python 3.4.2
+# Python 3.4
 docker build \
        --force-rm \
        --tag \
-       "${DOCKER_USER}/python:3.4.2" \
-       3.4.2
+       "${DOCKER_USER}/python:3.4" \
+       3.4
 
-# Python 3.5.3
+# Python 3.5
 docker build \
        --force-rm \
        --tag \
-       "${DOCKER_USER}/python:3.5.3" \
-       3.5.3
+       "${DOCKER_USER}/python:3.5" \
+       3.5
 
-# Python 3.6.5
+# Python 3.7
 docker build \
        --force-rm \
-       --tag "${DOCKER_USER}/python:3.6.5" \
-       3.6.5
+       --tag "${DOCKER_USER}/python:3.7" \
+       3.7
 
 # Tests
 clear
 COMMAND='python --version'
-echo -n 'latest: ' && \
-    docker run \
-           --rm \
-           "${DOCKER_USER}/python:latest" \
-           bash -c "${COMMAND}"
-echo -n '2.7.13: ' && \
+echo -n '2.7: ' && \
     docker run --rm \
-           "${DOCKER_USER}/python:2.7.13" \
+           "${DOCKER_USER}/python:2.7" \
            bash -c "${COMMAND}"
-echo -n '3.4.2:  ' && \
+echo -n '3.4:  ' && \
     docker run \
            --rm \
-           "${DOCKER_USER}/python:3.4.2" \
+           "${DOCKER_USER}/python:3.4" \
            bash -c "${COMMAND}"
-echo -n '3.5.3:  ' && \
+echo -n '3.5:  ' && \
     docker run \
            --rm \
-           "${DOCKER_USER}/python:3.5.3" \
+           "${DOCKER_USER}/python:3.5" \
            bash -c "${COMMAND}"
-echo -n '3.6.5:  ' && \
+echo -n '3.7:  ' && \
     docker run \
            --rm \
-           "${DOCKER_USER}/python:3.6.5" \
+           "${DOCKER_USER}/python:3.7" \
            bash -c "${COMMAND}"
 # EOF

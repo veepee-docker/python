@@ -29,16 +29,16 @@ Docker images of Python.
 
 ## Tags
 
-Supported tags and respective Dockerfile links.
+Supported tags.
 
-- 2.7.13, 2.7 ([2.7.13/Dockerfile](2.7.13/Dockerfile))
-- 3.4.2, 3.4 ([3.4.2/Dockerfile](3.4.2/Dockerfile))
-- 3.5.3, 3.5, latest ([3.5.3/Dockerfile](3.5.3/Dockerfile))
-- 3.6.5, 3.6 ([3.6.5/Dockerfile](3.6.5/Dockerfile))
+- 2.7
+- 3.4
+- 3.5
+- 3.7, latest
 
 ## Usage
 
-Soon :)
+WIP.
 
 ## Limitations
 
@@ -61,9 +61,8 @@ request.
    ╚═(███)═╝
 ```
 
-[license-img]: https://img.shields.io/badge/license-Apache-blue.svg
+[license-img]: https://img.shields.io/badge/license-ISC-blue.svg
 [license-href]: LICENSE
-[docker-img]: https://img.shields.io/docker/pulls/vpgrp/python.svg
-[docker-href]: https://hub.docker.com/r/vpgrp/python/
-[overview-href]: https://www.python.org/
+[docker-img]: https://img.shields.io/docker/pulls/vptech/python.svg
+[docker-href]: https://hub.docker.com/r/vptech/python/
 [contribute-href]: CONTRIBUTING.md

@@ -1,41 +1,128 @@
 ---
 # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
 
-stages:
-  - commit
-  - syntax
-  - docker
-
-# commit
-git-history:
-  stage: commit
-  script:
-    - >
-      bash <(curl --fail --location --silent --show-error
-      https://git.io/vxIxF)
-
-lines-length:
-  stage: commit
-  script:
-    - >
-      bash <(curl --fail --location --silent --show-error
-      https://git.io/vxIxN)
-
-# syntax
-docker-lint:
-  stage: syntax
-  image: vpgrp/linter:docker
-  script:
-    - find . -type f -name "Dockerfile" | xargs -I{} dockerlint {}
-
-# docker
-build-latest:
-  stage: docker
+# build template
+.build:
+  stage: build
   image: docker:latest
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - image
   services:
     - docker:dind
   variables:
     DOCKER_DRIVER: overlay
+
+# test template
+.test:
+  stage: test
+  image: docker:latest
+  before_script:
+    - docker load -i image/v2.7.tar
+    - docker load -i image/v3.4.tar
+    - docker load -i image/v3.5.tar
+    - docker load -i image/v3.7.tar
+  only:
+    - master
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+
+# deploy template
+.deploy:
+  stage: deploy
+  image: docker:latest
+  before_script:
+    - docker login -u "$REGISTRY_USERNAME" -p "$REGISTRY_PASSWORD"
+    - docker load -i image/v2.7.tar
+    - docker load -i image/v3.4.tar
+    - docker load -i image/v3.5.tar
+    - docker load -i image/v3.7.tar
+  only:
+    - master
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+
+stages:
+  - lint
+  - build
+  - test
+  - deploy
+
+# test
+dockerlint:
+  stage: lint
+  image: vptech/linter:docker
   script:
-    - docker build --rm --tag vpgrp/python:latest .
+    - find . -type f -name "Dockerfile" | xargs -I {} dockerlint {}
+
+# build
+v2.7:build:
+  extends: .build
+  script:
+    - docker build --rm --tag python:2.7 2.7
+    - mkdir image
+    - docker save python:2.7 > image/v2.7.tar
+
+v3.4:build:
+  extends: .build
+  script:
+    - docker build --rm --tag python:3.4 3.4
+    - mkdir image
+    - docker save python:3.4 > image/v3.4.tar
+
+v3.5:build:
+  extends: .build
+  script:
+    - docker build --rm --tag python:3.5 3.5
+    - mkdir image
+    - docker save python:3.5 > image/v3.5.tar
+
+v3.7:build:
+  extends: .build
+  script:
+    - docker build --rm --tag python:3.7 3.7
+    - mkdir image
+    - docker save python:3.7 > image/v3.7.tar
+
+# test
+v2.7:test:
+  extends: .test
+  script:
+    - docker run python:2.7 python --version
+
+v3.4:test:
+  extends: .test
+  script:
+    - docker run python:3.4 python --version
+
+v3.5:test:
+  extends: .test
+  script:
+    - docker run python:3.5 python --version
+
+v3.7:test:
+  extends: .test
+  script:
+    - docker run python:3.7 python --version
+
+# deploy
+# https://hub.docker.com/u/vptech/
+vptech:
+  extends: .deploy
+  script:
+    - docker tag python:2.7 vptech/python:2.7
+    - docker tag python:3.4 vptech/python:3.4
+    - docker tag python:3.5 vptech/python:3.5
+    - docker tag python:3.7 vptech/python:3.7
+    - docker tag python:3.7 vptech/python:latest
+    - docker push vptech/python:2.7
+    - docker push vptech/python:3.4
+    - docker push vptech/python:3.5
+    - docker push vptech/python:3.7
+    - docker push vptech/python:latest
 # EOF
