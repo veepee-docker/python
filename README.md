@@ -31,10 +31,11 @@ Docker images of Python.
 
 Supported tags.
 
-- 2.7
-- 3.4
-- 3.5
-- 3.7, latest
+- 2.7 (based on vptech/debian:stretch)
+- 3.4 (based on vptech/debian:jessie)
+- 3.5 (based on vptech/debian:stretch)
+- 3.6 (based on vptech/ubuntu:bionic)
+- 3.7, latest (based on vptech/debian:buster)
 
 ## Usage
 

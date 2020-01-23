@@ -29,6 +29,13 @@ docker build \
        "${DOCKER_USER}/python:3.5" \
        3.5
 
+# Python 3.6
+docker build \
+       --force-rm \
+       --tag \
+       "${DOCKER_USER}/python:3.6" \
+       3.6
+
 # Python 3.7
 docker build \
        --force-rm \
@@ -51,6 +58,11 @@ echo -n '3.5:  ' && \
     docker run \
            --rm \
            "${DOCKER_USER}/python:3.5" \
+           bash -c "${COMMAND}"
+echo -n '3.6:  ' && \
+    docker run \
+           --rm \
+           "${DOCKER_USER}/python:3.6" \
            bash -c "${COMMAND}"
 echo -n '3.7:  ' && \
     docker run \
